@@ -8,7 +8,9 @@
 enum LoggingLevel {
     DEBUG = 0,
     INFO = 1,
-    ERROR = 2
+    WARN = 2,
+    ERROR = 3,
+    FATAL = 4
 };
 
 class ConsoleLogger {
@@ -25,16 +27,24 @@ public:
             throw std::invalid_argument("Log message cannot be empty.");
         }
 
-        static const char* logLevelStr[] = {"DEBUG", "INFO", "ERROR"};
+        static const char* logLevelStr[] = {"DEBUG", "INFO", "WARN", "ERROR", "FATAL"};
         std::cout << "[" << getCurrentTimestamp() << "][" << logLevelStr[type] << "]: " << message << std::endl;
+    
+        
+        if (type == FATAL) {
+            std::cerr << "[FATAL]: Critical error" << std::endl;
+        }
     }
+    
 
     void run() {
         try {
             print("Application starting");
             log(INFO, "Initialization complete.");
             log(DEBUG, "Debugging details...");
+            log(WARN, "Potential issue detected.");
             log(ERROR, "An error has occurred");
+            log(FATAL, "Critical failure!");
             log(INFO, "");
         } catch (const std::exception& e) {
             std::cerr << "[ERROR]: Exception caught: " << e.what() << std::endl;
